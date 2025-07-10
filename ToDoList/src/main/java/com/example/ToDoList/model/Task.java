@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.Date;
 
 @Entity //required for JPA
-@Table(name = "Task")
+@Table(name = "tasks")
 @Getter
 @Setter
 @NoArgsConstructor //creates a constructor with no args(parameters) which is required by JPA
