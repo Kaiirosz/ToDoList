@@ -3,7 +3,7 @@ package com.example.ToDoList.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity //required for JPA
 @Table(name = "tasks")
@@ -24,10 +24,11 @@ public class Task {
     private String taskDescription;
 
     @Column(name = "due_date")
-    private Date dueDate;
+    private LocalDateTime dueDate; //Hibernate automatically maps this to a TIMESTAMP column in the database.
 
     @Column(name = "completed")
     private boolean completed;
 
 
 }
+
