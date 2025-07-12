@@ -9,4 +9,5 @@ public class TaskDTO {
     private String taskName;
     private String taskDescription;
     private Date dueDate;
+    private Boolean completed;
 }

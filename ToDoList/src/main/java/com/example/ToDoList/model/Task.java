@@ -9,7 +9,7 @@ import java.util.Date;
 @Table(name = "tasks")
 @Getter
 @Setter
-@NoArgsConstructor //creates a constructor with no args(parameters) which is required by JPA
+@NoArgsConstructor //creates a constructor with no args(parameters) which is required by JPA.
 @AllArgsConstructor //creates a constructor with all attribute parameters to easily instantiate the entity.
 public class Task {
 
@@ -25,6 +25,9 @@ public class Task {
 
     @Column(name = "due_date")
     private Date dueDate;
+
+    @Column(name = "completed")
+    private boolean completed;
 
 
 }
