@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor //creates a constructor with no args(parameters) which is required by JPA.
 @AllArgsConstructor //creates a constructor with all attribute parameters to easily instantiate the entity.
+@Builder
 public class Task {
 
     @Id

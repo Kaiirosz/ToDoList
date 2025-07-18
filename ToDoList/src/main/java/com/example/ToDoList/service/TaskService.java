@@ -19,8 +19,9 @@ public class TaskService {
         this.taskMapper = taskMapper;
     }
 
-    public void createTask(TaskDTO taskDTO){
-        taskRepository.save(taskMapper.toEntity(taskDTO));
+    public TaskDTO createTask(TaskDTO taskDTO){
+        Task savedTask = taskRepository.save(taskMapper.toEntity(taskDTO));
+        return taskMapper.toDTO(savedTask);
     }
 
     public void deleteTask(Long id){
@@ -30,10 +31,12 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
-    public void editTask(Long id, TaskDTO taskDTO){
+    public TaskDTO editTask(Long id, TaskDTO taskDTO){
         Task taskToBeUpdated = taskRepository.findById(id).
                 orElseThrow(() ->  new TaskNotFoundException("Task with id " + id + " not found"));
         taskMapper.editTaskFromDTO(taskDTO, taskToBeUpdated);
+        Task updatedTask = taskRepository.save(taskToBeUpdated);
+        return taskMapper.toDTO(updatedTask);
     }
 
 
