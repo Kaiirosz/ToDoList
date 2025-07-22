@@ -1,6 +1,7 @@
 package com.example.ToDoList.service;
 
 import com.example.ToDoList.dto.TaskDTO;
+import com.example.ToDoList.dto.TaskPatchDTO;
 import com.example.ToDoList.exception.TaskNotFoundException;
 import com.example.ToDoList.mapper.TaskMapper;
 import com.example.ToDoList.model.Task;
@@ -35,6 +36,14 @@ public class TaskService {
         Task taskToBeUpdated = taskRepository.findById(id).
                 orElseThrow(() ->  new TaskNotFoundException("Task with id " + id + " not found"));
         taskMapper.editTaskFromDTO(taskDTO, taskToBeUpdated);
+        Task updatedTask = taskRepository.save(taskToBeUpdated);
+        return taskMapper.toDTO(updatedTask);
+    }
+
+    public TaskDTO patchTask(Long id, TaskPatchDTO taskPatchDTO){
+        Task taskToBeUpdated = taskRepository.findById(id).
+                orElseThrow(() ->  new TaskNotFoundException("Task with id " + id + " not found"));
+        taskMapper.patchTaskFromDTO(taskPatchDTO, taskToBeUpdated);
         Task updatedTask = taskRepository.save(taskToBeUpdated);
         return taskMapper.toDTO(updatedTask);
     }

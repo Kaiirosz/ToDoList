@@ -2,6 +2,7 @@ package com.example.ToDoList.controller;
 
 
 import com.example.ToDoList.dto.TaskDTO;
+import com.example.ToDoList.dto.TaskPatchDTO;
 import com.example.ToDoList.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,11 @@ public class TaskController {
     @PutMapping("/{id}")
     public TaskDTO editTask(@PathVariable Long id, @Valid @RequestBody TaskDTO taskDTO){
         return taskService.editTask(id, taskDTO);
+    }
+
+    @PatchMapping("/{id}")
+    public TaskDTO patchTask(@PathVariable Long id, @RequestBody TaskPatchDTO patchDTO) {
+        return taskService.patchTask(id, patchDTO);
     }
 
     @GetMapping()
