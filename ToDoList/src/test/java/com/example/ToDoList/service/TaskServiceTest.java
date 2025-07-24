@@ -216,6 +216,7 @@ class TaskServiceTest {
                 .taskName("Do The Dishes")
                 .taskDescription("Description")
                 .dueDate(LOCAL_DATE_TIME)
+                .completed(false)
                 .build();
     }
 
@@ -224,6 +225,7 @@ class TaskServiceTest {
                 .taskName("Do The Dishes")
                 .taskDescription("Description")
                 .dueDate(LOCAL_DATE_TIME)
+                .completed(false)
                 .build();
     }
 
