@@ -20,6 +20,12 @@ public class TaskService {
         this.taskMapper = taskMapper;
     }
 
+    public TaskDTO getTask(long id){
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException("Task with id " + id + " not found"));
+        return taskMapper.toDTO(task);
+    }
+
     public TaskDTO createTask(TaskDTO taskDTO){
         Task savedTask = taskRepository.save(taskMapper.toEntity(taskDTO));
         return taskMapper.toDTO(savedTask);

@@ -20,6 +20,12 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    @GetMapping("/{id}")
+    public TaskDTO getTask(Long id){
+        return taskService.getTask(id);
+    }
+
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

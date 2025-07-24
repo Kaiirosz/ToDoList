@@ -32,77 +32,88 @@ class TaskServiceTest {
     @InjectMocks
     TaskService taskService;
 
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
+    private static final LocalDateTime LOCAL_DATE_TIME = LocalDateTime.parse("07-19-2026 23:30",FORMATTER);
+    private static final Long VALID_ID = 1L;
+    private static final Long INVALID_ID = 5L;
+
     @Test
-    public void givenTask_whenCreateTask_thenReturnTaskDTO() {
-        TaskDTO taskDTO = TaskDTO.builder()
-                .taskName("Do The Dishes").taskDescription("Description").build();
-        Task task = Task.builder().id(1).taskName("Do The Dishes").taskDescription("Description").build();
-        when(taskMapper.toEntity(taskDTO)).thenReturn(task);
+    public void givenValidId_whenGetTask_thenReturnTaskDTO(){
+        Task task = createSampleTask();
+        TaskDTO taskDTO = createSampleTaskDTO();
+        when(taskRepository.findById(VALID_ID)).thenReturn(Optional.of(task));
         when(taskMapper.toDTO(task)).thenReturn(taskDTO);
-        when(taskRepository.save(task)).thenReturn(task);
-        TaskDTO savedTask = taskService.createTask(taskDTO);
-        Assertions.assertNotNull(savedTask);
-        Assertions.assertEquals("Do The Dishes", savedTask.getTaskName());
-        Assertions.assertEquals("Description", savedTask.getTaskDescription());
-        verify(taskMapper).toEntity(taskDTO);
-        verify((taskMapper)).toDTO(task);
-        verify(taskRepository).save(task);
+        TaskDTO result = taskService.getTask(VALID_ID);
+        Assertions.assertEquals(taskDTO, result);
+        Assertions.assertEquals("Do The Dishes", result.getTaskName());
+        verify(taskRepository).findById(VALID_ID);
+        verify(taskMapper).toDTO(task);
     }
 
     @Test
-    public void givenId_whenDeleteTask_thenDeleteTaskInRepository() {
-        Long id = 1L;
-        when(taskRepository.existsById(id)).thenReturn(true);
-        taskService.deleteTask(id);
-        verify(taskRepository).existsById(id);
-        verify(taskRepository).deleteById(id);
+    public void givenInvalidId_whenGetTask_thenReturnTaskNotFoundException(){
+        when(taskRepository.findById(INVALID_ID)).thenReturn(Optional.empty());
+        TaskNotFoundException ex = Assertions.assertThrows(TaskNotFoundException.class, () -> taskService.getTask(INVALID_ID));
+        Assertions.assertEquals("Task with id " + INVALID_ID + " not found", ex.getMessage());
+        verify(taskRepository).findById(INVALID_ID);
+        verify(taskMapper, never()).toDTO(any(Task.class));
+    }
+
+    @Test
+    public void givenValidDTO_whenCreateTask_thenReturnTaskDTO() {
+        Task task = createSampleTask();
+        TaskDTO taskDTO = createSampleTaskDTO();
+        when(taskMapper.toEntity(taskDTO)).thenReturn(task);
+        when(taskRepository.save(task)).thenReturn(task);
+        when(taskMapper.toDTO(task)).thenReturn(taskDTO);
+        TaskDTO savedTask = taskService.createTask(taskDTO);
+        Assertions.assertNotNull(savedTask);
+        Assertions.assertEquals(taskDTO,savedTask);
+        verify(taskMapper).toEntity(taskDTO);
+        verify(taskRepository).save(task);
+        verify((taskMapper)).toDTO(task);
+    }
+
+    @Test
+    public void givenValidId_whenDeleteTask_thenDeleteTaskInRepository() {
+        when(taskRepository.existsById(VALID_ID)).thenReturn(true);
+        taskService.deleteTask(VALID_ID);
+        verify(taskRepository).existsById(VALID_ID);
+        verify(taskRepository).deleteById(VALID_ID);
     }
 
     @Test
     public void givenInvalidId_whenDeleteTask_thenThrowTaskNotFoundException() {
-        Long id = 5L;
-        when(taskRepository.existsById(id)).thenReturn(false);
-        Assertions.assertThrows(TaskNotFoundException.class, () -> taskService.deleteTask(id));
-        verify(taskRepository).existsById(id);
+        when(taskRepository.existsById(INVALID_ID)).thenReturn(false);
+        TaskNotFoundException ex = Assertions.assertThrows(TaskNotFoundException.class, () -> taskService.deleteTask(INVALID_ID));
+        Assertions.assertEquals("Task with id " + INVALID_ID + " not found", ex.getMessage());
+        verify(taskRepository).existsById(INVALID_ID);
         verify(taskRepository, never()).deleteById(anyLong());
     }
 
     @Test
-    public void givenIdAndTaskDTO_whenEditTask_thenReturnUpdatedTaskDTO() {
-        Long id = 1L;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
-        LocalDateTime localDateTime = LocalDateTime.parse("07-19-2026 23:30", formatter);
-        TaskDTO taskDTO = TaskDTO.builder()
-                .taskName("Clean your room")
-                .taskDescription("Description")
-                .dueDate(localDateTime)
-                .completed(false)
-                .build();
-        Task task = Task.builder()
-                .taskName("Clean your room")
-                .taskDescription("Description")
-                .dueDate(localDateTime)
-                .completed(false)
-                .build();
+    public void givenValidIdAndTaskDTO_whenEditTask_thenReturnUpdatedTaskDTO() {
+        Task task = createSampleTask();
+        TaskDTO taskDTO = createSampleTaskDTO();
         Task updatedTask = Task.builder()
                 .taskName("Wipe the floor")
                 .taskDescription("Updated Description")
-                .dueDate(localDateTime.plusDays(5))
+                .dueDate(LOCAL_DATE_TIME.plusDays(5))
                 .completed(true)
                 .build();
         TaskDTO updatedTaskDTO = TaskDTO.builder()
                 .taskName("Wipe the floor")
                 .taskDescription("Updated Description")
-                .dueDate(localDateTime.plusDays(5))
+                .dueDate(LOCAL_DATE_TIME.plusDays(5))
                 .completed(true)
                 .build();
-        when(taskRepository.findById(id)).thenReturn(Optional.of(task));
+        when(taskRepository.findById(VALID_ID)).thenReturn(Optional.of(task));
         doNothing().when(taskMapper).editTaskFromDTO(taskDTO, task);
         when(taskRepository.save(any(Task.class))).thenReturn(updatedTask);
         when(taskMapper.toDTO(updatedTask)).thenReturn(updatedTaskDTO);
-        TaskDTO result = taskService.editTask(id, taskDTO);
+        TaskDTO result = taskService.editTask(VALID_ID, taskDTO);
         Assertions.assertEquals(result, updatedTaskDTO);
-        verify(taskRepository).findById(id);
+        verify(taskRepository).findById(VALID_ID);
         verify(taskMapper).editTaskFromDTO(taskDTO, task);
         verify(taskRepository).save(any(Task.class));
         verify(taskMapper).toDTO(updatedTask);
@@ -110,26 +121,18 @@ class TaskServiceTest {
 
     @Test
     public void givenInvalidId_whenEditTask_thenThrowTaskNotFoundException() {
-        Long id = 5L;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
-        LocalDateTime localDateTime = LocalDateTime.parse("07-19-2026 23:30", formatter);
-        TaskDTO taskDTO = TaskDTO.builder()
-                .taskName("Clean your room")
-                .taskDescription("Description")
-                .dueDate(localDateTime)
-                .completed(false)
-                .build();
-        when(taskRepository.findById(id)).thenReturn(Optional.empty());
-        Assertions.assertThrows(TaskNotFoundException.class, () -> taskService.editTask(id, taskDTO));
-        verify(taskRepository).findById(id);
+        TaskDTO taskDTO = createSampleTaskDTO();
+        when(taskRepository.findById(INVALID_ID)).thenReturn(Optional.empty());
+        TaskNotFoundException ex = Assertions.assertThrows(TaskNotFoundException.class, () -> taskService.editTask(INVALID_ID, taskDTO));
+        Assertions.assertEquals("Task with id " + INVALID_ID + " not found", ex.getMessage());
+        verify(taskRepository).findById(INVALID_ID);
         verify(taskMapper, never()).editTaskFromDTO(any(TaskDTO.class), any(Task.class));
         verify(taskRepository, never()).save(any(Task.class));
         verify(taskMapper, never()).toDTO(any(Task.class));
     }
 
     @Test
-    public void givenIdAndTaskDTO_whenPatchTask_thenReturnUpdatedTaskDTO() {
-        Long id = 1L;
+    public void givenValidIdAndTaskDTO_whenPatchTask_thenReturnUpdatedTaskDTO() {
         TaskPatchDTO taskDTO = TaskPatchDTO.builder()
                 .taskName("Clean your room")
                 .taskDescription("Description")
@@ -146,13 +149,13 @@ class TaskServiceTest {
                 .taskName("Wipe the floor")
                 .taskDescription("Updated Description")
                 .build();
-        when(taskRepository.findById(id)).thenReturn(Optional.of(task));
+        when(taskRepository.findById(VALID_ID)).thenReturn(Optional.of(task));
         doNothing().when(taskMapper).patchTaskFromDTO(taskDTO, task);
         when(taskRepository.save(any(Task.class))).thenReturn(updatedTask);
         when(taskMapper.toDTO(updatedTask)).thenReturn(updatedTaskDTO);
-        TaskDTO result = taskService.patchTask(id, taskDTO);
+        TaskDTO result = taskService.patchTask(VALID_ID, taskDTO);
         Assertions.assertEquals(result, updatedTaskDTO);
-        verify(taskRepository).findById(id);
+        verify(taskRepository).findById(VALID_ID);
         verify(taskMapper).patchTaskFromDTO(taskDTO, task);
         verify(taskRepository).save(any(Task.class));
         verify(taskMapper).toDTO(updatedTask);
@@ -160,14 +163,14 @@ class TaskServiceTest {
 
     @Test
     public void givenInvalidId_whenPatchTask_thenThrowTaskNotFoundException() {
-        Long id = 5L;
-        TaskDTO taskDTO = TaskDTO.builder()
+        TaskPatchDTO taskDTO = TaskPatchDTO.builder()
                 .taskName("Clean your room")
                 .taskDescription("Description")
                 .build();
-        when(taskRepository.findById(id)).thenReturn(Optional.empty());
-        Assertions.assertThrows(TaskNotFoundException.class, () -> taskService.editTask(id, taskDTO));
-        verify(taskRepository).findById(id);
+        when(taskRepository.findById(INVALID_ID)).thenReturn(Optional.empty());
+        TaskNotFoundException ex = Assertions.assertThrows(TaskNotFoundException.class, () -> taskService.patchTask(INVALID_ID, taskDTO));
+        Assertions.assertEquals("Task with id " + INVALID_ID + " not found", ex.getMessage());
+        verify(taskRepository).findById(INVALID_ID);
         verify(taskMapper, never()).patchTaskFromDTO(any(TaskPatchDTO.class), any(Task.class));
         verify(taskRepository, never()).save(any(Task.class));
         verify(taskMapper, never()).toDTO(any(Task.class));
@@ -188,8 +191,40 @@ class TaskServiceTest {
         when(taskMapper.toDTOList(taskList)).thenReturn(taskDTOList);
         List<TaskDTO> result = taskService.getAllTasks();
         Assertions.assertEquals(result, taskDTOList);
+        Assertions.assertEquals("Task 1", result.getFirst().getTaskName());
+        Assertions.assertEquals("Desc 1", result.getFirst().getTaskDescription());
         verify(taskRepository).findAll();
         verify(taskMapper).toDTOList(taskList);
+    }
+
+    @Test
+    public void givenNoTasks_whenGetAllTasks_thenReturnEmptyTaskDTOList() {
+        List<Task> taskList = List.of();
+        List<TaskDTO> taskDTOList = List.of();
+        when(taskRepository.findAll()).thenReturn(taskList);
+        when(taskMapper.toDTOList(taskList)).thenReturn(taskDTOList);
+        List<TaskDTO> result = taskService.getAllTasks();
+        Assertions.assertEquals(result, taskDTOList);
+        Assertions.assertEquals(0, result.size());
+        Assertions.assertNotNull(result);
+        verify(taskRepository).findAll();
+        verify(taskMapper).toDTOList(taskList);
+    }
+
+    private Task createSampleTask(){
+        return Task.builder()
+                .taskName("Do The Dishes")
+                .taskDescription("Description")
+                .dueDate(LOCAL_DATE_TIME)
+                .build();
+    }
+
+    private TaskDTO createSampleTaskDTO(){
+        return TaskDTO.builder()
+                .taskName("Do The Dishes")
+                .taskDescription("Description")
+                .dueDate(LOCAL_DATE_TIME)
+                .build();
     }
 
 }
