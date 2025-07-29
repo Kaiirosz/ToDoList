@@ -8,7 +8,7 @@
 - MySQL production-ready setup
 
 📦Tech Stack
-- Java 17
+- Java 17+
 - Spring Boot
 - Spring Data JPA
 - MySQL (Production)
