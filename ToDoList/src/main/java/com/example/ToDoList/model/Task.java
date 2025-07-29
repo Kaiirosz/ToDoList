@@ -28,7 +28,7 @@ public class Task {
     private LocalDateTime dueDate; //Hibernate automatically maps this to a TIMESTAMP column in the database.
 
     @Column(name = "completed")
-    private boolean completed;
+    private Boolean completed;
 
 
 }

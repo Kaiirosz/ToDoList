@@ -340,7 +340,7 @@ class TaskControllerTest {
     }
 
     @Test
-    public void givenMalformedJSON_whenPatchTask_thenRespondWith404() throws Exception {
+    public void givenInvalidId_whenPatchTask_thenRespondWith404() throws Exception {
         TaskPatchDTO taskPatchDTO = createSampleTaskPatchDTO();
         String requestBody = objectMapper.writeValueAsString(taskPatchDTO);
         when(taskService.patchTask(INVALID_ID, taskPatchDTO)).thenThrow(new TaskNotFoundException("Task with id " + INVALID_ID + " not found")); //better for non-void return methods compared to doThrow - when
