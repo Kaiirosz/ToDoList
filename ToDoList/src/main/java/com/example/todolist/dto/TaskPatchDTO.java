@@ -1,4 +1,4 @@
-package com.example.ToDoList.dto;
+package com.example.todolist.dto;
 
 import lombok.Builder;
 import lombok.Data;

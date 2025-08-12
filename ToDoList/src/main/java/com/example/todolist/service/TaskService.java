@@ -1,13 +1,14 @@
-package com.example.ToDoList.service;
+package com.example.todolist.service;
 
-import com.example.ToDoList.dto.TaskDTO;
-import com.example.ToDoList.dto.TaskPatchDTO;
-import com.example.ToDoList.exception.TaskNotFoundException;
-import com.example.ToDoList.mapper.TaskMapper;
-import com.example.ToDoList.model.Task;
-import com.example.ToDoList.repository.TaskRepository;
+import com.example.todolist.dto.TaskDTO;
+import com.example.todolist.dto.TaskPatchDTO;
+import com.example.todolist.exception.TaskNotFoundException;
+import com.example.todolist.mapper.TaskMapper;
+import com.example.todolist.model.Task;
+import com.example.todolist.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service

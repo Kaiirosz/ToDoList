@@ -1,11 +1,11 @@
-package com.example.ToDoList.service;
+package com.example.todolist.service;
 
-import com.example.ToDoList.dto.TaskDTO;
-import com.example.ToDoList.dto.TaskPatchDTO;
-import com.example.ToDoList.exception.TaskNotFoundException;
-import com.example.ToDoList.mapper.TaskMapper;
-import com.example.ToDoList.model.Task;
-import com.example.ToDoList.repository.TaskRepository;
+import com.example.todolist.dto.TaskDTO;
+import com.example.todolist.dto.TaskPatchDTO;
+import com.example.todolist.exception.TaskNotFoundException;
+import com.example.todolist.mapper.TaskMapper;
+import com.example.todolist.model.Task;
+import com.example.todolist.repository.TaskRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +38,7 @@ class TaskServiceTest {
     private static final Long INVALID_ID = 5L;
 
     @Test
-    public void givenValidId_whenGetTask_thenReturnTaskDTO(){
+    public void givenValidId_whenGetTask_thenReturnTaskDTO(){ //happy path
         Task task = createSampleTask();
         TaskDTO taskDTO = createSampleTaskDTO();
         when(taskRepository.findById(VALID_ID)).thenReturn(Optional.of(task));

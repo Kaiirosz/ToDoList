@@ -1,8 +1,8 @@
-package com.example.ToDoList.mapper;
+package com.example.todolist.mapper;
 
-import com.example.ToDoList.dto.TaskDTO;
-import com.example.ToDoList.dto.TaskPatchDTO;
-import com.example.ToDoList.model.Task;
+import com.example.todolist.dto.TaskDTO;
+import com.example.todolist.dto.TaskPatchDTO;
+import com.example.todolist.model.Task;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-07-28T23:51:47+0800",
+    date = "2025-07-29T23:41:39+0800",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 23 (Oracle Corporation)"
 )
 @Component

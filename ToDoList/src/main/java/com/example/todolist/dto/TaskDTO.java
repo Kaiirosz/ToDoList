@@ -1,4 +1,4 @@
-package com.example.ToDoList.dto;
+package com.example.todolist.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Future;

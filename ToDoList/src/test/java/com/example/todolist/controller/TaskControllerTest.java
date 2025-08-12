@@ -1,10 +1,9 @@
-package com.example.ToDoList.controller;
+package com.example.todolist.controller;
 
-import com.example.ToDoList.dto.TaskDTO;
-import com.example.ToDoList.dto.TaskPatchDTO;
-import com.example.ToDoList.exception.TaskNotFoundException;
-import com.example.ToDoList.model.Task;
-import com.example.ToDoList.service.TaskService;
+import com.example.todolist.dto.TaskDTO;
+import com.example.todolist.dto.TaskPatchDTO;
+import com.example.todolist.exception.TaskNotFoundException;
+import com.example.todolist.service.TaskService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;

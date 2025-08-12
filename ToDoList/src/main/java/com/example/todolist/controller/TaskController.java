@@ -1,9 +1,9 @@
-package com.example.ToDoList.controller;
+package com.example.todolist.controller;
 
 
-import com.example.ToDoList.dto.TaskDTO;
-import com.example.ToDoList.dto.TaskPatchDTO;
-import com.example.ToDoList.service.TaskService;
+import com.example.todolist.dto.TaskDTO;
+import com.example.todolist.dto.TaskPatchDTO;
+import com.example.todolist.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

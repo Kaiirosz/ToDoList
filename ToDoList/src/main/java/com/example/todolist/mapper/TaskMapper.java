@@ -1,8 +1,8 @@
-package com.example.ToDoList.mapper;
+package com.example.todolist.mapper;
 
-import com.example.ToDoList.dto.TaskDTO;
-import com.example.ToDoList.dto.TaskPatchDTO;
-import com.example.ToDoList.model.Task;
+import com.example.todolist.dto.TaskDTO;
+import com.example.todolist.dto.TaskPatchDTO;
+import com.example.todolist.model.Task;
 import org.mapstruct.*;
 
 import java.util.List;
